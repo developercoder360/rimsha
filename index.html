@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="ur-Latn">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Rimsha ke liye ek khoobsurat birthday surprise — ek seedhi si LinkedIn connection se shuru hone wali amazing dosti. Happy Birthday! 🎂" />
+  <meta name="theme-color" content="#0d0d1a" />
+  <title>Happy Birthday Rimsha 🎂✨</title>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&family=Dancing+Script:wght@400;600;700&display=swap" rel="stylesheet" />
+
+  <!-- Stylesheet -->
+  <link rel="stylesheet" href="style.css" />
+
+  <!-- External Libraries -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js" defer></script>
+  <script src="https://unpkg.com/typed.js@2.1.0/dist/typed.umd.js" defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js" defer></script>
+  <script src="script.js" defer></script>
+</head>
+<body>
+
+  <!-- ============================================================
+       CANVAS — Particle Background
+  ============================================================ -->
+  <canvas id="particle-canvas" aria-hidden="true"></canvas>
+
+  <!-- ============================================================
+       CUSTOM MOUSE CURSOR
+  ============================================================ -->
+  <div id="custom-cursor" class="custom-cursor" aria-hidden="true">
+    <div class="cursor-dot"></div>
+    <div class="cursor-ring"></div>
+    <div class="cursor-trail-container"></div>
+    <div class="cursor-icon"></div>
+  </div>
+
+  <!-- ============================================================
+       PAGE LOADER
+  ============================================================ -->
+  <div id="loader" role="status" aria-label="Loading...">
+    <div class="loader-inner">
+      <div class="loader-star" aria-hidden="true">✦</div>
+      <div class="loader-star" aria-hidden="true">✦</div>
+      <div class="loader-star" aria-hidden="true">✦</div>
+      <p class="loader-text">Kuch khaas tayar ho raha hai tumhare liye...</p>
+    </div>
+  </div>
+
+  <!-- ============================================================
+       HUD / PROGRESS TRACKER (Hidden initially)
+  ============================================================ -->
+  <div id="hud" class="hud-container hidden glass">
+    <div class="hud-progress">
+      <span id="current-level-display">Level 1</span> / 10
+      <div class="progress-bar-bg"><div class="progress-bar-fill" id="progress-bar-fill"></div></div>
+    </div>
+    <div class="hud-stats">
+      <div class="stat"><span class="stat-icon" aria-hidden="true">⭐</span> <span id="stat-stars">0</span></div>
+      <div class="stat"><span class="stat-icon" aria-hidden="true">❤️</span> <span id="stat-hearts">0</span></div>
+      <div class="stat"><span class="stat-icon" aria-hidden="true">🎁</span> <span id="stat-points">0</span></div>
+    </div>
+    <button id="reset-progress-btn" class="reset-btn" aria-label="Game Reset Karein" title="Restart Journey">🔄</button>
+  </div>
+
+  <!-- Achievement Toast Container -->
+  <div id="achievement-toast" class="achievement-toast hidden glass" aria-live="polite">
+    <div class="toast-icon">🏆</div>
+    <div class="toast-content">
+      <h4>Achievement Unlocked!</h4>
+      <p id="toast-title">Memory Master</p>
+    </div>
+  </div>
+
+  <!-- ============================================================
+       MUSIC BUTTON (fixed)
+  ============================================================ -->
+  <button id="music-btn" class="music-btn" aria-label="Music Chalao" title="Music Chalao ya Band Karo" data-cursor="hover">
+    <span class="music-icon">🎵</span>
+    <span class="music-label">Music Chalao</span>
+  </button>
+
+  <!-- ============================================================
+       SECTION 1 — LANDING / HERO
+  ============================================================ -->
+  <section id="landing" aria-labelledby="landing-heading">
+    <!-- Floating balloons -->
+    <div class="balloons-container" aria-hidden="true">
+      <div class="balloon balloon-1" data-cursor="balloon">🎈</div>
+      <div class="balloon balloon-2" data-cursor="balloon">🎈</div>
+      <div class="balloon balloon-3" data-cursor="balloon">🎈</div>
+      <div class="balloon balloon-4" data-cursor="balloon">🎀</div>
+      <div class="balloon balloon-5" data-cursor="balloon">🎈</div>
+    </div>
+
+    <!-- Hero content -->
+    <div class="landing-content">
+      <p class="teaser-text" id="teaser-text" aria-live="polite">
+        Kisi ne tumhare liye ek choti si surprise tayar ki hai...
+      </p>
+      <h1 class="birthday-title" id="landing-heading" data-cursor="glow">
+        <span id="typed-text" aria-label="Happy Birthday Rimsha"></span>
+      </h1>
+      <div class="landing-sub">
+        <span class="sparkle" aria-hidden="true" data-cursor="star">✨</span>
+        <span class="landing-date">Aj ka din sirf tumhara hai</span>
+        <span class="sparkle" aria-hidden="true" data-cursor="star">✨</span>
+      </div>
+      <button class="scroll-cta" id="start-journey-btn" aria-label="Journey Shuru Karein" data-cursor="hover">
+        Journey Shuru Karein
+        <span class="cta-arrow" aria-hidden="true">↓</span>
+      </button>
+    </div>
+
+    <!-- Floating hearts & stars container -->
+    <div class="floating-container" id="floating-container" aria-hidden="true"></div>
+  </section>
+
+  <!-- ============================================================
+       ADVENTURE JOURNEY CONTAINER
+  ============================================================ -->
+  <section id="adventure-journey" class="hidden">
+    
+    <!-- LEVEL 1: Welcome -->
+    <div id="level-1" class="level-container active-level">
+      <div class="level-card glass">
+        <h2>Level 1 ✅</h2>
+        <p>Sab se pehle ek choti si challenge complete karo.</p>
+        <p class="hint-text">Tayar ho?</p>
+        <button class="level-btn" id="l1-btn" data-cursor="hover">Haan, Shuru Karein!</button>
+      </div>
+    </div>
+
+    <!-- LEVEL 2: Memory Puzzle -->
+    <div id="level-2" class="level-container hidden">
+      <div class="level-card glass">
+        <h2>Level 2 🔒</h2>
+        <p>Matching cards dhoondo! ❤️</p>
+        <div class="memory-grid" id="memory-grid">
+          <!-- Cards injected via JS -->
+        </div>
+      </div>
+    </div>
+
+    <!-- LEVEL 3: Catch the Hearts -->
+    <div id="level-3" class="level-container hidden">
+      <div class="level-card glass level-full">
+        <h2>Level 3 🔒</h2>
+        <p>Hawa mein urrtay huay 15 hearts pakro!</p>
+        <div class="catch-score">Score: <span id="catch-score-val">0</span> / 15</div>
+        <div class="catch-area" id="catch-area">
+          <!-- Hearts injected via JS -->
+        </div>
+      </div>
+    </div>
+
+    <!-- LEVEL 4: Birthday Quiz -->
+    <div id="level-4" class="level-container hidden">
+      <div class="level-card glass">
+        <h2>Level 4 🔒</h2>
+        <p>Chota sa cute quiz! Sahi jawab chuno.</p>
+        <div class="quiz-container" id="quiz-container">
+          <!-- Quiz content injected via JS -->
+        </div>
+      </div>
+    </div>
+
+    <!-- LEVEL 5: Hidden Gift -->
+    <div id="level-5" class="level-container hidden">
+      <div class="level-card glass">
+        <h2>Level 5 🔒</h2>
+        <p>Inmein se kis dabbe mein asli tohfa hai? 🎁</p>
+        <div class="gift-room" id="gift-room">
+          <div class="mystery-box" data-correct="false" data-cursor="gift">📦</div>
+          <div class="mystery-box" data-correct="false" data-cursor="gift">📦</div>
+          <div class="mystery-box" data-correct="true" data-cursor="gift">📦</div>
+          <div class="mystery-box" data-correct="false" data-cursor="gift">📦</div>
+        </div>
+        <p id="l5-msg" class="level-msg"></p>
+      </div>
+    </div>
+
+    <!-- LEVEL 6: Collect Candles -->
+    <div id="level-6" class="level-container hidden">
+      <div class="level-card glass level-full">
+        <h2>Level 6 🔒</h2>
+        <p>Jaldi se 5 candles jama karo! 🕯️</p>
+        <div class="catch-score">Time: <span id="candle-timer">15</span>s | Candles: <span id="candle-score">0</span>/5</div>
+        <div class="catch-area" id="candle-area">
+          <!-- Candles injected via JS -->
+        </div>
+      </div>
+    </div>
+
+    <!-- LEVEL 7: Build the Cake -->
+    <div id="level-7" class="level-container hidden">
+      <div class="level-card glass">
+        <h2>Level 7 🔒</h2>
+        <p>Cake banate hain! Items par click karke cake par lagao.</p>
+        <div class="cake-builder">
+          <div class="cake-ingredients" id="cake-ingredients">
+            <button class="ing-btn" data-part="base" data-cursor="hover">🥮 Base</button>
+            <button class="ing-btn hidden" data-part="cream" data-cursor="hover">🍦 Cream</button>
+            <button class="ing-btn hidden" data-part="chocolate" data-cursor="hover">🍫 Chocolate</button>
+            <button class="ing-btn hidden" data-part="cherry" data-cursor="hover">🍒 Cherry</button>
+          </div>
+          <div class="cake-display" id="build-cake-display" data-cursor="cake">
+            <div class="c-part c-cherry hidden">🍒</div>
+            <div class="c-part c-chocolate hidden"></div>
+            <div class="c-part c-cream hidden"></div>
+            <div class="c-part c-base hidden"></div>
+          </div>
+        </div>
+        <p id="l7-msg" class="level-msg"></p>
+      </div>
+    </div>
+
+    <!-- LEVEL 8: Unlock the Heart -->
+    <div id="level-8" class="level-container hidden">
+      <div class="level-card glass">
+        <h2>Level 8 🔒</h2>
+        <p>Is dil ko kholne ke liye password likho.</p>
+        <p class="hint-text">Hint: Hamari pehli mulaqat kis platform par hui thi?</p>
+        <div class="lock-input-group">
+          <input type="text" id="heart-password" placeholder="Password yahan likhein..." autocomplete="off" />
+          <button id="unlock-heart-btn" class="level-btn" data-cursor="hover">Unlock 🔓</button>
+        </div>
+        <p id="l8-msg" class="level-msg"></p>
+      </div>
+    </div>
+
+    <!-- LEVEL 9: Message Collection -->
+    <div id="level-9" class="level-container hidden">
+      <div class="level-card glass level-full">
+        <h2>Level 9 🔒</h2>
+        <p>Girtay huay letters ko pakro!</p>
+        <div class="message-slots" id="message-slots">
+          <!-- Slots for H A P P Y   B I R T H D A Y   R I M S H A -->
+        </div>
+        <div class="catch-area" id="letter-area">
+          <!-- Letters injected via JS -->
+        </div>
+      </div>
+    </div>
+
+  </section>
+
+
+  <!-- ============================================================
+       FINALE SECTIONS (Locked until Level 10)
+  ============================================================ -->
+  <div id="finale-sections" class="hidden">
+
+    <!-- SECTION 2 — STORY TIMELINE -->
+    <section id="story" aria-labelledby="story-heading">
+      <div class="section-header">
+        <p class="section-eyebrow">Ek Khoobsurat Safar</p>
+        <h2 class="section-title" id="story-heading" data-cursor="glow">Hamari Kahani <span class="emoji">💫</span></h2>
+      </div>
+
+      <div class="story-timeline">
+        <!-- Card 1 -->
+        <article class="story-card glass" data-card="1" data-cursor="hover">
+          <div class="card-icon" aria-hidden="true">🌐</div>
+          <div class="card-number">01</div>
+          <h3 class="card-title">Hamari Pehli Mulaqat</h3>
+          <p class="card-text">
+            Mujhe aj bhi yaad hai jab ham LinkedIn par connect huay thay.
+            Us waqt bilkul andaza nahi tha ke ek simple connection itni
+            achi dosti mein badal jayega.
+          </p>
+          <div class="card-tag">Jahan se sab shuru hua</div>
+        </article>
+
+        <!-- Card 2 -->
+        <article class="story-card glass" data-card="2" data-cursor="hover">
+          <div class="card-icon" aria-hidden="true">💬</div>
+          <div class="card-number">02</div>
+          <h3 class="card-title">Guftagu</h3>
+          <p class="card-text">
+            Pata hi nahi chala kab normal messages roz ki baaton mein
+            badal gaye. Kabhi hasi... kabhi serious baatein... kabhi
+            random topics... aur kabhi bas yun hi.
+          </p>
+          <div class="card-tag">Baatein jo dil ko chhoo gayi</div>
+        </article>
+
+        <!-- Card 3 -->
+        <article class="story-card glass" data-card="3" data-cursor="hover">
+          <div class="card-icon" aria-hidden="true">🌸</div>
+          <div class="card-number">03</div>
+          <h3 class="card-title">Khoobsurat Yaadein</h3>
+          <ul class="memory-list">
+            <li class="memory-item"><span class="mem-icon" aria-hidden="true">🌙</span> Raat ki lambi baatein</li>
+            <li class="memory-item"><span class="mem-icon" aria-hidden="true">😂</span> Hasne ke woh lamhe</li>
+            <li class="memory-item"><span class="mem-icon" aria-hidden="true">💡</span> Random aur gehri baatein</li>
+            <li class="memory-item"><span class="mem-icon" aria-hidden="true">🤝</span> Ek doosre ki madad</li>
+            <li class="memory-item"><span class="mem-icon" aria-hidden="true">🔥</span> Ek doosre ko himmat dena</li>
+            <li class="memory-item"><span class="mem-icon" aria-hidden="true">📚</span> Saath seekhna</li>
+            <li class="memory-item"><span class="mem-icon" aria-hidden="true">💌</span> Ideas share karna</li>
+            <li class="memory-item"><span class="mem-icon" aria-hidden="true">🫶</span> Hamesha positive rehna</li>
+          </ul>
+          <div class="card-tag">Woh yadein jo hamesha rehti hain</div>
+        </article>
+
+        <!-- Card 4 -->
+        <article class="story-card glass" data-card="4" data-cursor="hover">
+          <div class="card-icon" aria-hidden="true">💎</div>
+          <div class="card-number">04</div>
+          <h3 class="card-title">Shukriya</h3>
+          <p class="card-text">
+            Shukriya hamesha itni achi dost rehne ke liye. Tumhari
+            positivity aur kindness bohot special hai. Allah tumhein hamesha khush rakhe.
+          </p>
+          <div class="card-tag">Dil ki gehrai se</div>
+        </article>
+
+        <!-- Card 5 -->
+        <article class="story-card glass" data-card="5" data-cursor="hover">
+          <div class="card-icon" aria-hidden="true">🤲</div>
+          <div class="card-number">05</div>
+          <h3 class="card-title">Dil Se Dua <span aria-hidden="true">✨</span></h3>
+          <ul class="wish-list">
+            <li class="wish-item"><span aria-hidden="true">🌟</span> Allah tumhein lambi zindagi de</li>
+            <li class="wish-item"><span aria-hidden="true">😊</span> Har khushi naseeb ho</li>
+            <li class="wish-item"><span aria-hidden="true">💪</span> Har mushkil asaan ho</li>
+            <li class="wish-item"><span aria-hidden="true">🏆</span> Har sapna poora ho</li>
+            <li class="wish-item"><span aria-hidden="true">☮️</span> Dil ko sukoon mile</li>
+            <li class="wish-item"><span aria-hidden="true">🌸</span> Sehat aur kamyabi naseeb ho</li>
+            <li class="wish-item"><span aria-hidden="true">😄</span> Tum hamesha isi tarah muskurati raho</li>
+          </ul>
+          <div class="card-tag">Dil ki gehrai se dua</div>
+        </article>
+      </div>
+    </section>
+
+    <!-- SECTION 4 — FINAL SURPRISE (Gift → Cake) -->
+    <section id="final-surprise" aria-labelledby="surprise-heading">
+      <!-- Gift Stage -->
+      <div class="gift-stage" id="gift-stage">
+        <p class="surprise-prompt" id="surprise-heading">Rimsha, apna aakhri tohfa kholo! 🎀</p>
+        <button class="gift-btn" id="gift-btn" aria-label="Tohfa kholne ke liye click karo" data-cursor="gift">
+          <div class="gift-box" id="gift-box" aria-hidden="true">
+            <div class="gift-lid" id="gift-lid">
+              <div class="gift-ribbon-h"></div>
+              <div class="gift-bow">
+                <div class="bow-left"></div>
+                <div class="bow-right"></div>
+              </div>
+            </div>
+            <div class="gift-body">
+              <div class="gift-ribbon-v"></div>
+            </div>
+          </div>
+          <span class="gift-label">Click Karo Kholne Ke Liye!</span>
+        </button>
+      </div>
+
+      <!-- Cake Stage -->
+      <div class="cake-stage" id="cake-stage" aria-hidden="true" hidden>
+        <h2 class="cake-title" aria-live="polite" data-cursor="glow">🎂 Happy Birthday Rimsha 🎂</h2>
+
+        <button class="cake-container" id="cake-btn" aria-label="Birthday cake (5 baar click karo secret dhoondhne ke liye)" title="5 baar click karo..." data-cursor="cake">
+          <div class="cake" aria-hidden="true">
+            <div class="candles-row">
+              <div class="candle"><div class="flame"></div></div>
+              <div class="candle"><div class="flame"></div></div>
+              <div class="candle"><div class="flame"></div></div>
+              <div class="candle"><div class="flame"></div></div>
+              <div class="candle"><div class="flame"></div></div>
+            </div>
+            <div class="cake-tier tier-top">
+              <div class="cake-decoration"><span>🌸</span><span>✨</span><span>🌸</span></div>
+            </div>
+            <div class="cake-tier tier-mid">
+              <div class="cake-decoration"><span>🍓</span><span>💕</span><span>🍓</span></div>
+            </div>
+            <div class="cake-tier tier-bot">
+              <div class="cake-decoration"><span>🌺</span><span>🎀</span><span>💜</span><span>🎀</span><span>🌺</span></div>
+            </div>
+            <div class="cake-plate"></div>
+          </div>
+          <p class="cake-hint">Psst... 5 baar click karo 😉</p>
+        </button>
+
+        <!-- Easter Egg -->
+        <div class="easter-egg" id="easter-egg" hidden aria-live="assertive">
+          <div class="easter-egg-inner">
+            <p class="easter-emoji">😂🎉🎊</p>
+            <h3>Wah! Tum ne Secret Surprise Dhoond Liya!</h3>
+            <p>Rimsha, tumhari curiosity kamal ki hai! Bilkul tumhari tarah — amazing! 🥳</p>
+            <button class="easter-close" id="easter-close" data-cursor="hover">Shukriya! 🎉</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 5 — FINAL MESSAGE -->
+    <section id="final-message" aria-labelledby="final-heading">
+      <div class="message-container glass" data-cursor="hover">
+        <div class="message-header" aria-hidden="true">✨ 🎂 ✨</div>
+        <h2 class="message-title" id="final-heading">Happy Birthday Rimsha ❤️</h2>
+        <p class="message-body">
+          LinkedIn ki ek simple si connection se shuru hone wali dosti aj
+          bohot khoobsurat yaadon ka hissa ban chuki hai. Shukriya hamesha
+          itni achi dost rehne ke liye. Allah tumhein hamesha sehat,
+          khushiyan, kamyabi aur sukoon ata farmaye. Tumhari zindagi hamesha
+          muskurahaton se bhari rahe.
+        </p>
+        <p class="message-footer">
+          Happy Birthday once again! <span aria-hidden="true">🎉🎂✨</span>
+        </p>
+        <div class="message-signature" aria-label="Mohabbat ke saath">
+          Mohabbat ke saath <span aria-hidden="true">💜</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- FOOTER — QR Code -->
+    <footer id="site-footer">
+      <div class="footer-inner glass">
+        <p class="footer-title">Is Birthday Adventure ko Share Karo!</p>
+        <div id="birthday-qr" class="qr-placeholder" aria-label="QR Code placeholder">
+          <!-- <img src="qr-code.png" alt="Rimsha ke Birthday Site ka QR Code" width="160" height="160" /> -->
+          <div class="qr-mock" aria-hidden="true">
+            <div class="qr-inner">📱</div>
+            <p>Apna QR Code yahan lagao</p>
+          </div>
+        </div>
+        <p class="footer-credit">Mohabbat ke saath banaya gaya 💜 Rimsha ke liye &copy; 2025</p>
+      </div>
+    </footer>
+
+  </div>
+
+</body>
+</html>
