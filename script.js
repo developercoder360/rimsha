@@ -13,7 +13,7 @@ const randInt = (min, max) => Math.floor(rand(min, max));
 /* ================================================================
    1. STATE MANAGEMENT (LOCAL STORAGE)
 ================================================================ */
-const TOTAL_LEVELS = 10;
+const TOTAL_LEVELS = 16;
 const STORAGE_KEY = 'rimsha_bday_adventure_state';
 
 let gameState = {
@@ -21,6 +21,7 @@ let gameState = {
   stars: 0,
   hearts: 0,
   points: 0,
+  xp: 0,
   achievements: []
 };
 
@@ -193,8 +194,8 @@ function updateHUD() {
   $('#current-level-display').textContent = `Level ${gameState.currentLevel}`;
   $('#stat-stars').textContent = gameState.stars;
   $('#stat-hearts').textContent = gameState.hearts;
-  $('#stat-points').textContent = gameState.points;
-
+  $('#stat-xp').textContent = gameState.xp;
+  
   const pct = ((gameState.currentLevel - 1) / TOTAL_LEVELS) * 100;
   $('#progress-bar-fill').style.width = `${pct}%`;
 }
@@ -211,7 +212,7 @@ function startAdventure() {
   // Hide all levels, show current
   $$('.level-container').forEach(el => el.classList.add('hidden'));
 
-  if (gameState.currentLevel >= 10) {
+  if (gameState.currentLevel >= 16) {
     revealFinale();
   } else {
     initLevel(gameState.currentLevel);
@@ -222,10 +223,10 @@ function completeLevel() {
   burstConfetti();
   gameState.currentLevel++;
   saveProgress();
-
+  
   setTimeout(() => {
     $$('.level-container').forEach(el => el.classList.add('hidden'));
-    if (gameState.currentLevel >= 10) {
+    if (gameState.currentLevel >= 16) {
       revealFinale();
     } else {
       initLevel(gameState.currentLevel);
@@ -246,8 +247,10 @@ function initLevel(level) {
     if (level === 5) initLevel5();
     if (level === 6) initLevel6();
     if (level === 7) initLevel7();
-    if (level === 8) initLevel8();
-    if (level === 9) initLevel9();
+    if(level === 8) initLevel8();
+    if(level === 9) initLevel9();
+    
+    if(window.initExtraLevels) window.initExtraLevels(level);
   }
 }
 
@@ -594,24 +597,45 @@ function initLevel9() {
 
 
 /* ================================================================
-   6. FINAL REVEAL (Level 10)
+   6. FINAL REVEAL (Level 16)
 ================================================================ */
 function revealFinale() {
   $('#adventure-journey').classList.add('hidden');
-  $('#finale-sections').classList.remove('hidden');
-
-  // Huge fireworks
-  burstConfetti({ particleCount: 200, spread: 160 });
-  setTimeout(() => burstConfetti({ particleCount: 200, spread: 160 }), 500);
-  setTimeout(() => burstConfetti({ particleCount: 200, spread: 160 }), 1000);
-
-  // Re-init GSAP for the original story sections now that they are unhidden
-  if (typeof ScrollTrigger !== 'undefined') {
-    ScrollTrigger.refresh();
-  }
-
-  // Scroll to story
-  $('#story').scrollIntoView({ behavior: 'smooth' });
+  
+  // Cinematic Overlay
+  const overlay = $('#cinematic-overlay');
+  const ctext = $('#cinematic-text');
+  overlay.classList.remove('hidden');
+  ctext.classList.remove('hidden');
+  
+  setTimeout(() => {
+    overlay.classList.add('active');
+    ctext.classList.add('active');
+    
+    setTimeout(() => {
+      overlay.classList.remove('active');
+      ctext.classList.remove('active');
+      
+      setTimeout(() => {
+        overlay.classList.add('hidden');
+        ctext.classList.add('hidden');
+        $('#finale-sections').classList.remove('hidden');
+        
+        // Huge fireworks
+        burstConfetti({particleCount: 200, spread: 160});
+        setTimeout(() => burstConfetti({particleCount: 200, spread: 160}), 500);
+        setTimeout(() => burstConfetti({particleCount: 200, spread: 160}), 1000);
+        
+        if(window.magic) window.magic.noorSpeak("Jadoo poora hua! Happy Birthday!");
+        
+        if(typeof ScrollTrigger !== 'undefined') {
+          ScrollTrigger.refresh();
+        }
+        
+        $('#story').scrollIntoView({ behavior: 'smooth' });
+      }, 2000);
+    }, 5000); // 5 seconds of cinematic text
+  }, 100);
 }
 
 

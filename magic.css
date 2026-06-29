@@ -1,0 +1,146 @@
+/* ================================================================
+   MAGIC ENGINE STYLES (magic.css)
+   Live Environments, Noor Guide, Weather & Events
+================================================================ */
+
+/* --- LIVE ENVIRONMENTS --- */
+body {
+  transition: background 2s ease-in-out, color 2s;
+}
+
+#env-background {
+  position: fixed; inset: 0; z-index: -2;
+  transition: opacity 2s ease-in-out, background 2s ease-in-out;
+}
+
+.theme-nightsky #env-background { background: radial-gradient(ellipse at top left, #1a0030 0%, #0d0d1a 40%, #001a33 100%); opacity: 1; }
+.theme-morning #env-background { background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 99%, #fecfef 100%); opacity: 1; }
+.theme-sunset #env-background { background: linear-gradient(to top, #ff7e5f, #feb47b); opacity: 1; }
+.theme-galaxy #env-background { background: radial-gradient(circle at center, #2b0057, #000000); opacity: 1; }
+.theme-aurora #env-background { background: linear-gradient(135deg, #00223E, #1D976C); opacity: 1; }
+.theme-dream #env-background { background: linear-gradient(120deg, #e0c3fc 0%, #8ec5fc 100%); opacity: 1; }
+
+/* --- NOOR: THE MAGICAL GUIDE --- */
+#noor-guide {
+  position: fixed;
+  bottom: 30px; right: 30px;
+  z-index: 9999;
+  width: 60px; height: 60px;
+  display: flex; justify-content: center; align-items: center;
+  transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  animation: float-noor 3s ease-in-out infinite;
+}
+.noor-hidden { transform: scale(0); pointer-events: none; }
+#noor-guide:hover { transform: scale(1.2); }
+
+.noor-body {
+  font-size: 2.5rem;
+  filter: drop-shadow(0 0 15px rgba(255, 215, 0, 0.8));
+}
+.noor-wings {
+  position: absolute;
+  width: 100px; height: 40px;
+  background: radial-gradient(ellipse, rgba(255,255,255,0.4) 0%, transparent 70%);
+  animation: flap 0.2s infinite alternate;
+  z-index: -1;
+}
+@keyframes float-noor { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-15px); } }
+@keyframes flap { from { transform: scaleY(1); } to { transform: scaleY(0.3); } }
+
+.noor-bubble {
+  position: absolute;
+  bottom: 70px; right: 10px;
+  background: rgba(255, 255, 255, 0.9);
+  color: #7b2ff7;
+  padding: 10px 15px;
+  border-radius: 15px 15px 0 15px;
+  font-weight: 600; font-size: 0.9rem;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+  white-space: nowrap;
+  animation: pop-bubble 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+  transform-origin: bottom right;
+}
+@keyframes pop-bubble { from { transform: scale(0); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+
+/* --- HUD EXTENSIONS --- */
+.hud-controls { display: flex; gap: 10px; position: absolute; top: 0.5rem; right: 0.5rem; }
+.icon-btn { font-size: 1.2rem; cursor: none; transition: 0.2s; background: none; border: none; opacity: 0.5; }
+.icon-btn:hover { opacity: 1; transform: scale(1.2); }
+
+/* --- WEATHER & MAGIC LAYERS --- */
+#weather-layer, #magic-events-layer {
+  position: fixed; inset: 0;
+  pointer-events: none; z-index: 100;
+  overflow: hidden;
+}
+
+/* Fireflies */
+.firefly {
+  position: absolute;
+  width: 4px; height: 4px;
+  background: #ffffaa;
+  border-radius: 50%;
+  box-shadow: 0 0 10px 2px #ffffaa;
+  animation: firefly-move 10s infinite linear, firefly-blink 2s infinite alternate;
+}
+@keyframes firefly-blink { 0% { opacity: 0.2; } 100% { opacity: 1; box-shadow: 0 0 15px 4px #ffffaa; } }
+
+/* Rain of Hearts */
+.rain-heart {
+  position: absolute; font-size: 1.5rem;
+  animation: rain-fall linear forwards;
+}
+@keyframes rain-fall { from { transform: translateY(-50px) rotate(0deg); opacity: 1; } to { transform: translateY(110vh) rotate(360deg); opacity: 0; } }
+
+/* Shooting Star */
+.shooting-star {
+  position: absolute;
+  width: 100px; height: 2px;
+  background: linear-gradient(90deg, rgba(255,255,255,1), transparent);
+  transform: rotate(-45deg);
+  animation: shoot 1s linear forwards;
+}
+@keyframes shoot { from { transform: translateX(0) translateY(0) rotate(-45deg); opacity: 1; } to { transform: translateX(-500px) translateY(500px) rotate(-45deg); opacity: 0; } }
+
+/* Floating Bottle */
+#floating-bottle {
+  position: fixed;
+  font-size: 3rem;
+  z-index: 999;
+  cursor: none;
+  animation: float-bottle 15s linear forwards, bob 2s infinite alternate;
+}
+@keyframes float-bottle { from { left: -100px; top: 30%; } to { left: 110vw; top: 70%; } }
+@keyframes bob { from { transform: translateY(0) rotate(-10deg); } to { transform: translateY(20px) rotate(10deg); } }
+
+/* Collectibles (Diamonds, Flowers) */
+.collectible {
+  position: absolute;
+  font-size: 2rem;
+  z-index: 200;
+  cursor: none;
+  animation: pop-in 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards, float-item 3s infinite ease-in-out alternate;
+}
+@keyframes pop-in { from { transform: scale(0); } to { transform: scale(1); } }
+@keyframes float-item { from { transform: translateY(0); } to { transform: translateY(-15px); } }
+.collectible.collected { animation: collected-anim 0.5s forwards; }
+@keyframes collected-anim { to { transform: translateY(-50px) scale(0); opacity: 0; } }
+
+/* --- CINEMATIC OVERLAY --- */
+#cinematic-overlay {
+  position: fixed; inset: 0; z-index: 10000;
+  background: radial-gradient(ellipse, transparent, rgba(0,0,0,0.8));
+  pointer-events: none;
+  opacity: 0; transition: opacity 2s;
+}
+#cinematic-overlay.active { opacity: 1; }
+
+#cinematic-text {
+  position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
+  z-index: 10001; font-family: var(--font-script);
+  font-size: 4rem; color: #fff; text-align: center;
+  text-shadow: 0 0 20px var(--gold);
+  opacity: 0; transition: opacity 3s; pointer-events: none;
+}
+#cinematic-text.active { opacity: 1; animation: scale-text 5s forwards; }
+@keyframes scale-text { from { transform: translate(-50%, -50%) scale(0.9); } to { transform: translate(-50%, -50%) scale(1.1); } }
